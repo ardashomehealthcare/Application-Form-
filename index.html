@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application - Ardas Home Health Care</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; 
+            padding: 20px;
+            /* Full page background logo with transparency */
+            background: linear-gradient(rgba(255,255,255,0.94), rgba(255,255,255,0.94)), 
+                        url('https://drive.google.com/thumbnail?id=1yYyeHvHNdUzAJpe_yH8mu_9_fgRZEbYa&sz=w1000');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid #27ae60;
+            padding-bottom: 20px;
+        }
+        header img { 
+            width: 110px; 
+            height: 110px;
+            border-radius: 50%; 
+            border: 3px solid #27ae60;
+            object-fit: cover;
+        }
+        h1 { color: #2c3e50; font-size: 24px; margin: 10px 0; }
+        h3 { 
+            color: #27ae60; 
+            border-left: 4px solid #27ae60; 
+            padding-left: 10px; 
+            margin-top: 30px; 
+            font-size: 18px;
+        }
+        label { display: block; margin-top: 15px; font-weight: bold; color: #34495e; }
+        
+        input[type="text"], input[type="tel"], textarea, input[type="file"] {
+            width: 100%; 
+            padding: 12px; 
+            margin-top: 6px; 
+            border: 1px solid #ccc;
+            border-radius: 8px; 
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        
+        .duty-box { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-top: 10px;
+            border: 1px solid #eee;
+        }
+        .duty-box label { display: inline; font-weight: normal; margin-right: 15px; cursor: pointer; }
+        .duty-box input { cursor: pointer; }
+
+        button {
+            background-color: #27ae60; 
+            color: white; 
+            padding: 16px; 
+            border: none;
+            width: 100%; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 18px; 
+            font-weight: bold; 
+            margin-top: 30px; 
+            transition: background 0.3s ease;
+        }
+        button:hover { background-color: #1e8449; }
+        button:disabled { background-color: #95a5a6; cursor: not-allowed; }
+        
+        .status-msg {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+            display: none;
+        }
+@media (max-width: 900px) { 
+img { 
+   max-width: 100%;
+   height: auto;
+}
+
+.table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td, th {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+}	
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <img src="https://drive.google.com/thumbnail?id=1yYyeHvHNdUzAJpe_yH8mu_9_fgRZEbYa&sz=w200" alt="Ardas Logo">
+        <h1>ARDAS HOME HEALTH CARE</h1>
+        <p>Job Application Form</p>
+    </header>
+
+    <form id="jobForm">
+        <h3>Personal Information</h3>
+        <label>Full Name</label>
+        <input type="text" id="fullname" placeholder="Enter full name" required>
+        
+        <label>Calling Number</label>
+        <input type="tel" id="phone" placeholder="Your calling number" required>
+        
+        <label>WhatsApp Number</label>
+        <input type="tel" id="whatsapp" placeholder="Your WhatsApp number" required>
+        
+        <label>Full Address</label>
+        <textarea id="address" rows="3" placeholder="Enter complete home address" required></textarea>
+
+        <h3>Documents Upload</h3>
+        <label>Qualification Certificate (Image/PDF)</label>
+        <input type="file" id="qual" accept="image/*,.pdf" required>
+        
+        <label>Aadhaar Card (Front Side)</label>
+        <input type="file" id="af" accept="image/*" required>
+        
+        <label>Aadhaar Card (Rear Side)</label>
+        <input type="file" id="ar" accept="image/*" required>
+
+        <h3>Duty Preference</h3>
+        <div class="duty-box">
+            <input type="checkbox" id="d_day"> <label for="d_day">Day Shift</label>
+            <input type="checkbox" id="d_night"> <label for="d_night">Night Shift</label>
+            <input type="checkbox" id="d_24"> <label for="d_24">24 Hours</label>
+        </div>
+
+        <button type="submit" id="submitBtn">Submit Application</button>
+        <div id="status" class="status-msg"></div>
+    </form>
+</div>
+
+<script>
+    // Your Deployed Google Apps Script URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyE7OxRJIlcIve_ep3bqmmP2tY0ArNP147RPXUD2KWAoo7nMPY1ObpDJGvOIyb4Wk1h/exec";
+
+    document.getElementById('jobForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const status = document.getElementById('status');
+        
+        btn.innerText = "Uploading Documents... Please wait";
+        btn.disabled = true;
+        status.style.display = "block";
+        status.style.color = "#2980b9";
+        status.innerText = "Processing files and saving to Google Drive...";
+
+        const getBase64 = (file) => new Promise((res) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => res({ 
+                contents: reader.result.split(',')[1], 
+                mimeType: file.type 
+            });
+        });
+
+        try {
+            const payload = {
+                fullname: document.getElementById('fullname').value,
+                phone: document.getElementById('phone').value,
+                whatsapp: document.getElementById('whatsapp').value,
+                address: document.getElementById('address').value,
+                duty_day: document.getElementById('d_day').checked ? "Yes" : "No",
+                duty_night: document.getElementById('d_night').checked ? "Yes" : "No",
+                duty_24hrs: document.getElementById('d_24').checked ? "Yes" : "No",
+                qualification: await getBase64(document.getElementById('qual').files[0]),
+                aadhaar_front: await getBase64(document.getElementById('af').files[0]),
+                aadhaar_rear: await getBase64(document.getElementById('ar').files[0])
+            };
+
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Use no-cors if you face redirect issues
+                body: JSON.stringify(payload)
+            });
+
+            status.style.color = "#27ae60";
+            status.innerText = "Application Submitted Successfully!";
+            alert("Success! Your application has been sent to Ardas Home Health Care.");
+            document.getElementById('jobForm').reset();
+            
+        } catch (error) {
+            console.error(error);
+            status.style.color = "#c0392b";
+            status.innerText = "Error: Submission failed. Please try again.";
+            alert("Something went wrong. Please check your internet or script settings.");
+        } finally {
+            btn.innerText = "Submit Application";
+            btn.disabled = false;
+        }
+    });
+</script>
+<p style="bottom: 10px; right: 10px; position: absolute;"><a href="https://wordtohtml.net/?utm_source=wth_free_doc_conversion_link&utm_medium=external" target="_blank" style="font-size:11px; color: #d0d0d0">Converted to HTML with WordToHTML.net</a><span style="font-size:11px; color: #d0d0d0"> | </span><a href="https://documentconverter.pro/?utm_source=wth_free_doc_conversion_link&utm_medium=external" target="_blank" style="font-size:11px; color: #d0d0d0">Document Converter for Windows</a></p>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4581d6a58cf94e929fad52deda295622","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
