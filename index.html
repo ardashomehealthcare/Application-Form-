@@ -1,160 +1,731 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Application - Ardas Home Health Care</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), 
-                              url('https://drive.google.com/thumbnail?id=1yYyeHvHNdUzAJpe_yH8mu_9_fgRZEbYa&sz=w1000');
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: contain;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        header img {
-            width: 100px;
-            border-radius: 50%;
-        }
-        h1 { color: #2c3e50; font-size: 24px; }
-        section { margin-bottom: 20px; }
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        input[type="text"], input[type="tel"], textarea, input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        .checkbox-group { margin-top: 10px; }
-        .checkbox-group label { display: inline; font-weight: normal; margin-right: 15px; }
-        button {
-            background-color: #27ae60;
-            color: white;
-            padding: 15px;
-            border: none;
-            width: 100%;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-        button:hover { background-color: #219150; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Application - Ardas Home Health Care</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --color-bg: #FAF8F4;
+    --color-card: #FFFFFF;
+    --color-primary: #1F4B43;
+    --color-primary-soft: #EDF3F1;
+    --color-accent: #C99A3C;
+    --color-text: #2B2E2C;
+    --color-muted: #6B7570;
+    --color-border: #E1E6E2;
+    --color-error: #B3452E;
+    --color-success: #2F7D5C;
+    --radius: 14px;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    margin: 0;
+    padding: 0;
+    color: var(--color-text);
+    background:
+      linear-gradient(180deg, rgba(250,248,244,0.97) 0%, rgba(250,248,244,0.99) 40%, #FAF8F4 100%),
+      url('https://drive.google.com/thumbnail?id=1yYyeHvHNdUzAJpe_yH8mu_9_fgRZEbYa&sz=w1000');
+    background-attachment: fixed;
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: 500px auto;
+    min-height: 100vh;
+  }
+
+  .logo-banner {
+    width: 100%;
+    background: var(--color-card);
+    border-bottom: 1px solid var(--color-border);
+    padding: 18px 20px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(31,75,67,0.06);
+  }
+
+  .logo-banner img {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+  }
+
+  .page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  header.brand {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  header.brand h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: 0.01em;
+    color: var(--color-primary);
+    margin: 14px 0 4px;
+  }
+
+  header.brand p {
+    color: var(--color-muted);
+    font-size: 14px;
+    margin: 0;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  /* Step tracker — reflects the real 4-stage flow of the application */
+  .steps {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 28px 0 32px;
+    padding: 0 4px;
+  }
+
+  .step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 13px;
+    left: 55%;
+    width: 90%;
+    height: 2px;
+    background: var(--color-border);
+    z-index: 0;
+  }
+
+  .step.done:not(:last-child)::after {
+    background: var(--color-primary);
+  }
+
+  .step .dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--color-card);
+    border: 2px solid var(--color-border);
+    color: var(--color-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0 auto 8px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.2s ease;
+  }
+
+  .step.active .dot {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+  }
+
+  .step.done .dot {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+  }
+
+  .step span.label {
+    font-size: 11.5px;
+    color: var(--color-muted);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .step.active span.label { color: var(--color-primary); }
+
+  .card {
+    background: var(--color-card);
+    border-radius: 20px;
+    padding: 8px;
+    box-shadow: 0 4px 24px rgba(31,75,67,0.08);
+    border: 1px solid var(--color-border);
+  }
+
+  section.block {
+    padding: 26px 26px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  section.block:last-of-type {
+    border-bottom: none;
+  }
+
+  .block-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .block-num {
+    font-family: var(--font-display);
+    font-size: 15px;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .block-head h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--color-primary);
+    margin: 0;
+  }
+
+  .field { margin-bottom: 18px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label.field-label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 6px;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: var(--color-muted);
+    margin-top: 4px;
+  }
+
+  input[type="text"], input[type="tel"], textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    color: var(--color-text);
+    background: #FCFBF9;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  input[type="text"]:focus, input[type="tel"]:focus, textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: #fff;
+  }
+
+  textarea { resize: vertical; min-height: 70px; }
+
+  .file-input {
+    border: 1.5px dashed var(--color-border);
+    border-radius: 10px;
+    padding: 14px;
+    background: #FCFBF9;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+
+  .file-input:hover { border-color: var(--color-accent); }
+
+  .file-input input[type="file"] {
+    width: 100%;
+    font-size: 13px;
+    font-family: var(--font-body);
+    color: var(--color-muted);
+  }
+
+  .file-name {
+    font-size: 12.5px;
+    color: var(--color-success);
+    margin-top: 6px;
+    font-weight: 600;
+    display: none;
+  }
+
+  .error-msg {
+    font-size: 12.5px;
+    color: var(--color-error);
+    margin-top: 5px;
+    font-weight: 600;
+    display: none;
+  }
+
+  .field.invalid input, .field.invalid .file-input {
+    border-color: var(--color-error);
+  }
+
+  .field.invalid .error-msg { display: block; }
+
+  .duty-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .duty-chip {
+    flex: 1;
+    min-width: 90px;
+  }
+
+  .duty-chip input { display: none; }
+
+  .duty-chip label {
+    display: block;
+    text-align: center;
+    padding: 12px 8px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--color-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .duty-chip input:checked + label {
+    background: var(--color-primary-soft);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .submit-wrap { padding: 22px 26px 26px; }
+
+  button#submitBtn {
+    width: 100%;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 15.5px;
+    font-weight: 700;
+    font-family: var(--font-body);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+
+  button#submitBtn:hover:not(:disabled) { background: #16352F; }
+  button#submitBtn:active:not(:disabled) { transform: scale(0.99); }
+  button#submitBtn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+  .progress-track {
+    display: none;
+    height: 6px;
+    background: var(--color-border);
+    border-radius: 999px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+
+  .progress-track.show { display: block; }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--color-accent);
+    border-radius: 999px;
+    transition: width 0.2s ease;
+  }
+
+  .spinner {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translate(-50%, 20px);
+    background: var(--color-primary);
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s ease;
+    max-width: 90%;
+    text-align: center;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .toast.error { background: var(--color-error); }
+
+  @media (max-width: 480px) {
+    .logo-banner { padding: 14px 16px; }
+    .logo-banner img { max-width: 280px; }
+    .page { padding: 20px 14px 50px; }
+    section.block { padding: 20px 18px; }
+    .step span.label { font-size: 10px; }
+    header.brand h1 { font-size: 22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <img src="https://drive.google.com/thumbnail?id=1yYyeHvHNdUzAJpe_yH8mu_9_fgRZEbYa&sz=w200" alt="Ardas Logo">
-        <h1>ARDAS HOME HEALTH CARE</h1>
-        <p>Job Application Form</p>
-    </header>
-
-    <form id="applicationForm" action="https://script.google.com/macros/s/AKfycbyE7OxRJIlcIve_ep3bqmmP2tY0ArNP147RPXUD2KWAoo7nMPY1ObpDJGvOIyb4Wk1h/exec" method="POST">
-        
-        <section>
-            <h3>Personal Information</h3>
-            <label>Full Name</label>
-            <input type="text" name="fullname" id="fullname" required>
-            
-            <label>Calling Number</label>
-            <input type="tel" name="phone" id="phone" required>
-            
-            <label>WhatsApp Number</label>
-            <input type="tel" name="whatsapp" id="whatsapp" required>
-            
-            <label>Full Address</label>
-            <textarea name="address" id="address" rows="3" required></textarea>
-        </section>
-
-        <section>
-            <h3>Documents Upload</h3>
-            <label>Qualification Certificate (PDF/Image)</label>
-            <input type="file" name="qualification" id="qual" required>
-            
-            <label>Aadhaar Card (Front Image)</label>
-            <input type="file" name="aadhaar_front" id="af" required>
-            
-            <label>Aadhaar Card (Rear Image)</label>
-            <input type="file" name="aadhaar_rear" id="ar" required>
-        </section>
-
-        <section>
-            <h3>Duty Preference</h3>
-            <div class="checkbox-group">
-                <input type="checkbox" name="duty_day" id="day"> <label for="day">Day</label>
-                <input type="checkbox" name="duty_night" id="night"> <label for="night">Night</label>
-                <input type="checkbox" name="duty_24hrs" id="full"> <label for="full">24 Hrs</label>
-            </div>
-        </section>
-
-        <button type="submit" id="submitBtn">Submit Application</button>
-    </form>
+<div class="logo-banner">
+  <img src="https://drive.google.com/thumbnail?id=1yYyeHvHNdUzAJpe_yH8mu_9_fgRZEbYa&sz=w1000" alt="Ardas Home Health Care logo">
 </div>
 
+<div class="page">
+  <header class="brand">
+    <h1>Ardas Home Health Care</h1>
+    <p>Job Application</p>
+  </header>
+
+  <div class="steps" id="stepTracker">
+    <div class="step active" data-step="1"><div class="dot">1</div><span class="label">Personal</span></div>
+    <div class="step" data-step="2"><div class="dot">2</div><span class="label">Documents</span></div>
+    <div class="step" data-step="3"><div class="dot">3</div><span class="label">Preference</span></div>
+    <div class="step" data-step="4"><div class="dot">4</div><span class="label">Submit</span></div>
+  </div>
+
+  <div class="card">
+    <form id="applicationForm" novalidate
+      action="https://script.google.com/macros/s/AKfycbyE7OxRJIlcIve_ep3bqmmP2tY0ArNP147RPXUD2KWAoo7nMPY1ObpDJGvOIyb4Wk1h/exec"
+      method="POST">
+
+      <section class="block" data-section="1">
+        <div class="block-head">
+          <span class="block-num">01</span>
+          <h3>Personal Information</h3>
+        </div>
+
+        <div class="field" id="field-fullname">
+          <label class="field-label" for="fullname">Full Name</label>
+          <input type="text" name="fullname" id="fullname" required>
+          <div class="error-msg">Please enter your full name.</div>
+        </div>
+
+        <div class="field" id="field-phone">
+          <label class="field-label" for="phone">Calling Number</label>
+          <input type="tel" name="phone" id="phone" inputmode="numeric" maxlength="10" required>
+          <div class="error-msg">Enter a valid 10-digit number.</div>
+        </div>
+
+        <div class="field" id="field-whatsapp">
+          <label class="field-label" for="whatsapp">WhatsApp Number</label>
+          <input type="tel" name="whatsapp" id="whatsapp" inputmode="numeric" maxlength="10" required>
+          <div class="error-msg">Enter a valid 10-digit number.</div>
+        </div>
+
+        <div class="field" id="field-address">
+          <label class="field-label" for="address">Full Address</label>
+          <textarea name="address" id="address" rows="3" required></textarea>
+          <div class="error-msg">Please enter your address.</div>
+        </div>
+      </section>
+
+      <section class="block" data-section="2">
+        <div class="block-head">
+          <span class="block-num">02</span>
+          <h3>Documents</h3>
+        </div>
+        <p class="hint" style="margin-top:-8px; margin-bottom:16px;">PDF or image files, up to 5MB each.</p>
+
+        <div class="field" id="field-qual">
+          <label class="field-label" for="qual">Qualification Certificate</label>
+          <div class="file-input"><input type="file" name="qualification" id="qual" accept=".pdf,.jpg,.jpeg,.png" required></div>
+          <div class="file-name" id="qual-name"></div>
+          <div class="error-msg">Upload a PDF/image under 5MB.</div>
+        </div>
+
+        <div class="field" id="field-af">
+          <label class="field-label" for="af">Aadhaar Card (Front)</label>
+          <div class="file-input"><input type="file" name="aadhaar_front" id="af" accept=".pdf,.jpg,.jpeg,.png" required></div>
+          <div class="file-name" id="af-name"></div>
+          <div class="error-msg">Upload a PDF/image under 5MB.</div>
+        </div>
+
+        <div class="field" id="field-ar">
+          <label class="field-label" for="ar">Aadhaar Card (Rear)</label>
+          <div class="file-input"><input type="file" name="aadhaar_rear" id="ar" accept=".pdf,.jpg,.jpeg,.png" required></div>
+          <div class="file-name" id="ar-name"></div>
+          <div class="error-msg">Upload a PDF/image under 5MB.</div>
+        </div>
+      </section>
+
+      <section class="block" data-section="3">
+        <div class="block-head">
+          <span class="block-num">03</span>
+          <h3>Duty Preference</h3>
+        </div>
+
+        <div class="field" id="field-duty">
+          <div class="duty-options">
+            <div class="duty-chip">
+              <input type="checkbox" name="duty_day" id="day">
+              <label for="day">Day</label>
+            </div>
+            <div class="duty-chip">
+              <input type="checkbox" name="duty_night" id="night">
+              <label for="night">Night</label>
+            </div>
+            <div class="duty-chip">
+              <input type="checkbox" name="duty_24hrs" id="full">
+              <label for="full">24 Hrs</label>
+            </div>
+          </div>
+          <div class="error-msg">Select at least one duty preference.</div>
+        </div>
+      </section>
+
+      <div class="submit-wrap" data-section="4">
+        <button type="submit" id="submitBtn">
+          <span class="spinner" id="spinner"></span>
+          <span id="btnLabel">Submit Application</span>
+        </button>
+        <div class="progress-track" id="progressTrack">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-    const form = document.getElementById('applicationForm');
-    const SCRIPT_URL = form.action;
+  const form = document.getElementById('applicationForm');
+  const SCRIPT_URL = form.action;
+  const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+  const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        btn.innerText = "Uploading... Please wait";
-        btn.disabled = true;
+  function showToast(message, isError) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast show' + (isError ? ' error' : '');
+    setTimeout(() => { toast.className = 'toast'; }, 3800);
+  }
 
-        const getBase64 = (file) => new Promise((res) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => res({ contents: reader.result.split(',')[1], mimeType: file.type });
-        });
+  function setFieldError(fieldId, show) {
+    const field = document.getElementById(fieldId);
+    if (show) field.classList.add('invalid');
+    else field.classList.remove('invalid');
+  }
 
-        try {
-            const payload = {
-                fullname: document.getElementById('fullname').value,
-                phone: document.getElementById('phone').value,
-                whatsapp: document.getElementById('whatsapp').value,
-                address: document.getElementById('address').value,
-                duty_day: document.getElementById('day').checked ? "Yes" : "No",
-                duty_night: document.getElementById('night').checked ? "Yes" : "No",
-                duty_24hrs: document.getElementById('full').checked ? "Yes" : "No",
-                qualification: await getBase64(document.getElementById('qual').files[0]),
-                aadhaar_front: await getBase64(document.getElementById('af').files[0]),
-                aadhaar_rear: await getBase64(document.getElementById('ar').files[0]),
-                folderId: "1Dbtie1BIgCgYEP-oujQt8YzFz2I-a4ok"
-            };
+  function validateFile(inputEl, fieldId) {
+    const file = inputEl.files[0];
+    if (!file) { setFieldError(fieldId, true); return false; }
+    if (file.size > MAX_SIZE) { setFieldError(fieldId, true); return false; }
+    if (ACCEPTED_TYPES.length && !ACCEPTED_TYPES.includes(file.type) && file.type !== '') {
+      // some phone cameras omit mime type; fall back to extension check
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (!['pdf','jpg','jpeg','png'].includes(ext)) { setFieldError(fieldId, true); return false; }
+    }
+    setFieldError(fieldId, false);
+    return true;
+  }
 
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(payload)
-            });
-
-            alert("Application Submitted Successfully!");
-            form.reset();
-        } catch (error) {
-            alert("Error submitting form. Please try again.");
-        } finally {
-            btn.innerText = "Submit Application";
-            btn.disabled = false;
-        }
+  // File name preview
+  [['qual','qual-name'],['af','af-name'],['ar','ar-name']].forEach(([inputId, nameId]) => {
+    const input = document.getElementById(inputId);
+    const nameEl = document.getElementById(nameId);
+    input.addEventListener('change', () => {
+      const fieldId = 'field-' + inputId;
+      const ok = validateFile(input, fieldId);
+      if (input.files[0]) {
+        nameEl.textContent = (ok ? '✓ ' : '') + input.files[0].name;
+        nameEl.style.display = 'block';
+        nameEl.style.color = ok ? 'var(--color-success)' : 'var(--color-error)';
+      } else {
+        nameEl.style.display = 'none';
+      }
     });
+  });
+
+  function validatePhone(id) {
+    const val = document.getElementById(id).value.trim();
+    const ok = /^[0-9]{10}$/.test(val);
+    setFieldError('field-' + id, !ok);
+    return ok;
+  }
+
+  document.getElementById('phone').addEventListener('input', () => validatePhone('phone'));
+  document.getElementById('whatsapp').addEventListener('input', () => validatePhone('whatsapp'));
+
+  document.getElementById('fullname').addEventListener('input', function() {
+    setFieldError('field-fullname', this.value.trim().length === 0);
+  });
+
+  document.getElementById('address').addEventListener('input', function() {
+    setFieldError('field-address', this.value.trim().length === 0);
+  });
+
+  function validateDuty() {
+    const ok = document.getElementById('day').checked ||
+               document.getElementById('night').checked ||
+               document.getElementById('full').checked;
+    setFieldError('field-duty', !ok);
+    return ok;
+  }
+
+  ['day','night','full'].forEach(id => {
+    document.getElementById(id).addEventListener('change', validateDuty);
+  });
+
+  function validateAll() {
+    let ok = true;
+    if (document.getElementById('fullname').value.trim() === '') { setFieldError('field-fullname', true); ok = false; }
+    if (!validatePhone('phone')) ok = false;
+    if (!validatePhone('whatsapp')) ok = false;
+    if (document.getElementById('address').value.trim() === '') { setFieldError('field-address', true); ok = false; }
+    if (!validateFile(document.getElementById('qual'), 'field-qual')) ok = false;
+    if (!validateFile(document.getElementById('af'), 'field-af')) ok = false;
+    if (!validateFile(document.getElementById('ar'), 'field-ar')) ok = false;
+    if (!validateDuty()) ok = false;
+    return ok;
+  }
+
+  const getBase64 = (file) => new Promise((res) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => res({ contents: reader.result.split(',')[1], mimeType: file.type });
+  });
+
+  // Encoding is weighted as the first 35% of the bar, upload fills the rest
+  const ENCODE_SHARE = 35;
+  const progressTrack = document.getElementById('progressTrack');
+  const progressFill = document.getElementById('progressFill');
+  const label = document.getElementById('btnLabel');
+
+  function setProgress(pct, text) {
+    progressFill.style.width = Math.min(pct, 100) + '%';
+    if (text) label.textContent = text;
+  }
+
+  function uploadWithProgress(url, bodyString) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', url, true);
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const uploadPct = (e.loaded / e.total) * (100 - ENCODE_SHARE);
+          const pct = ENCODE_SHARE + uploadPct;
+          setProgress(pct, 'Uploading... ' + Math.round(pct) + '%');
+        }
+      };
+      xhr.onload = () => resolve(xhr);
+      xhr.onerror = () => reject(new Error('Network error'));
+      xhr.send(bodyString);
+    });
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!validateAll()) {
+      showToast('Please fix the highlighted fields.', true);
+      const firstInvalid = document.querySelector('.field.invalid');
+      if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    const spinner = document.getElementById('spinner');
+    spinner.style.display = 'inline-block';
+    btn.disabled = true;
+    progressTrack.classList.add('show');
+    setProgress(0, 'Preparing documents...');
+
+    try {
+      const files = [
+        document.getElementById('qual').files[0],
+        document.getElementById('af').files[0],
+        document.getElementById('ar').files[0]
+      ];
+      const encoded = [];
+      for (let i = 0; i < files.length; i++) {
+        encoded.push(await getBase64(files[i]));
+        setProgress(((i + 1) / files.length) * ENCODE_SHARE, 'Preparing documents... ' + (i + 1) + '/' + files.length);
+      }
+
+      const payload = {
+        fullname: document.getElementById('fullname').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        whatsapp: document.getElementById('whatsapp').value.trim(),
+        address: document.getElementById('address').value.trim(),
+        duty_day: document.getElementById('day').checked ? "Yes" : "No",
+        duty_night: document.getElementById('night').checked ? "Yes" : "No",
+        duty_24hrs: document.getElementById('full').checked ? "Yes" : "No",
+        qualification: encoded[0],
+        aadhaar_front: encoded[1],
+        aadhaar_rear: encoded[2],
+        folderId: "1Dbtie1BIgCgYEP-oujQt8YzFz2I-a4ok"
+      };
+
+      setProgress(ENCODE_SHARE, 'Uploading... ' + ENCODE_SHARE + '%');
+      await uploadWithProgress(SCRIPT_URL, JSON.stringify(payload));
+
+      setProgress(100, 'Done!');
+      showToast('Application submitted successfully!', false);
+      form.reset();
+      document.querySelectorAll('.file-name').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.field.invalid').forEach(el => el.classList.remove('invalid'));
+    } catch (error) {
+      showToast('Something went wrong. Please try again.', true);
+    } finally {
+      spinner.style.display = 'none';
+      label.textContent = 'Submit Application';
+      btn.disabled = false;
+      setTimeout(() => {
+        progressTrack.classList.remove('show');
+        setProgress(0);
+      }, 1200);
+    }
+  });
+
+  // Step tracker highlight on scroll
+  const sections = document.querySelectorAll('[data-section]');
+  const steps = document.querySelectorAll('.step');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const num = entry.target.getAttribute('data-section');
+        steps.forEach(step => {
+          const stepNum = step.getAttribute('data-step');
+          step.classList.toggle('active', stepNum === num);
+          step.classList.toggle('done', parseInt(stepNum) < parseInt(num));
+        });
+      }
+    });
+  }, { threshold: 0.4, rootMargin: '-20% 0px -50% 0px' });
+  sections.forEach(sec => observer.observe(sec));
 </script>
 
 </body>
