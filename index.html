@@ -303,6 +303,35 @@
 
   .submit-wrap { padding: 22px 26px 26px; }
 
+  .wa-panel {
+    display: none;
+    margin: 0 26px 26px;
+    padding: 18px;
+    background: var(--color-primary-soft);
+    border: 1px solid var(--color-primary);
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .wa-panel.show { display: block; }
+
+  .wa-panel p {
+    margin: 0 0 12px;
+    font-size: 13.5px;
+    color: var(--color-text);
+  }
+
+  .wa-panel a {
+    display: inline-block;
+    background: #25D366;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 11px 20px;
+    border-radius: 10px;
+  }
+
   button#submitBtn {
     width: 100%;
     background: var(--color-primary);
@@ -413,6 +442,7 @@
     <div class="step" data-step="2"><div class="dot">2</div><span class="label">Documents</span></div>
     <div class="step" data-step="3"><div class="dot">3</div><span class="label">Preference</span></div>
     <div class="step" data-step="4"><div class="dot">4</div><span class="label">Submit</span></div>
+    <div class="step" data-step="5"><div class="dot">5</div><span class="label">Join Group</span></div>
   </div>
 
   <div class="card">
@@ -448,6 +478,21 @@
           <label class="field-label" for="address">Full Address</label>
           <textarea name="address" id="address" rows="3" required></textarea>
           <div class="error-msg">Please enter your address.</div>
+        </div>
+
+        <div class="field" id="field-gender">
+          <label class="field-label">Gender</label>
+          <div class="duty-options">
+            <div class="duty-chip">
+              <input type="radio" name="gender" id="genderMale" value="Male">
+              <label for="genderMale">Male</label>
+            </div>
+            <div class="duty-chip">
+              <input type="radio" name="gender" id="genderFemale" value="Female">
+              <label for="genderFemale">Female</label>
+            </div>
+          </div>
+          <div class="error-msg">Please select your gender.</div>
         </div>
       </section>
 
@@ -515,6 +560,11 @@
         </div>
       </div>
     </form>
+
+    <div class="wa-panel" id="waPanel" data-section="5">
+      <p>Your application was received. Tap below to join your duty WhatsApp group:</p>
+      <a href="#" id="waLink" target="_blank" rel="noopener">Join WhatsApp Group</a>
+    </div>
   </div>
 </div>
 
@@ -526,9 +576,13 @@
   const MAX_SIZE = 5 * 1024 * 1024; // 5MB
   const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
 
-  function showToast(message, isError) {
+  function showToast(message, isError, href) {
     const toast = document.getElementById('toast');
-    toast.textContent = message;
+    if (href) {
+      toast.innerHTML = '<a href="' + href + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">' + message + '</a>';
+    } else {
+      toast.textContent = message;
+    }
     toast.className = 'toast show' + (isError ? ' error' : '');
     setTimeout(() => { toast.className = 'toast'; }, 3800);
   }
@@ -599,12 +653,24 @@
     document.getElementById(id).addEventListener('change', validateDuty);
   });
 
+  function validateGender() {
+    const ok = document.getElementById('genderMale').checked ||
+               document.getElementById('genderFemale').checked;
+    setFieldError('field-gender', !ok);
+    return ok;
+  }
+
+  ['genderMale','genderFemale'].forEach(id => {
+    document.getElementById(id).addEventListener('change', validateGender);
+  });
+
   function validateAll() {
     let ok = true;
     if (document.getElementById('fullname').value.trim() === '') { setFieldError('field-fullname', true); ok = false; }
     if (!validatePhone('phone')) ok = false;
     if (!validatePhone('whatsapp')) ok = false;
     if (document.getElementById('address').value.trim() === '') { setFieldError('field-address', true); ok = false; }
+    if (!validateGender()) ok = false;
     if (!validateFile(document.getElementById('qual'), 'field-qual')) ok = false;
     if (!validateFile(document.getElementById('af'), 'field-af')) ok = false;
     if (!validateFile(document.getElementById('ar'), 'field-ar')) ok = false;
@@ -646,6 +712,15 @@
     });
   }
 
+  // Replace these with your real WhatsApp group invite links
+  const WHATSAPP_LINKS = {
+    Male: 'https://chat.whatsapp.com/GzLvQSyd2oF4CPziDs1dTZ?s=cl&p=a&ilr=1',
+    Female: 'https://chat.whatsapp.com/EtiOgGsejT75T2BRfAYOF1?s=cl&p=a&ilr=1'
+  };
+
+  const waPanel = document.getElementById('waPanel');
+  const waLink = document.getElementById('waLink');
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -662,6 +737,7 @@
     btn.disabled = true;
     progressTrack.classList.add('show');
     setProgress(0, 'Preparing documents...');
+    waPanel.classList.remove('show');
 
     try {
       const files = [
@@ -675,11 +751,14 @@
         setProgress(((i + 1) / files.length) * ENCODE_SHARE, 'Preparing documents... ' + (i + 1) + '/' + files.length);
       }
 
+      const gender = document.querySelector('input[name="gender"]:checked').value;
+
       const payload = {
         fullname: document.getElementById('fullname').value.trim(),
         phone: document.getElementById('phone').value.trim(),
         whatsapp: document.getElementById('whatsapp').value.trim(),
         address: document.getElementById('address').value.trim(),
+        gender: gender,
         duty_day: document.getElementById('day').checked ? "Yes" : "No",
         duty_night: document.getElementById('night').checked ? "Yes" : "No",
         duty_24hrs: document.getElementById('full').checked ? "Yes" : "No",
@@ -694,6 +773,18 @@
 
       setProgress(100, 'Done!');
       showToast('Application submitted successfully!', false);
+
+      // Reveal the WhatsApp group link matching the applicant's gender
+      waLink.href = WHATSAPP_LINKS[gender];
+      waLink.textContent = 'Join WhatsApp Group for job updates';
+      waPanel.classList.add('show');
+      waPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      // Pop-up message after the success toast fades
+      setTimeout(() => {
+        showToast('Join WhatsApp Group for job updates', false, WHATSAPP_LINKS[gender]);
+      }, 4000);
+
       form.reset();
       document.querySelectorAll('.file-name').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.field.invalid').forEach(el => el.classList.remove('invalid'));
