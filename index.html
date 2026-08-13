@@ -598,7 +598,6 @@
     if (!file) { setFieldError(fieldId, true); return false; }
     if (file.size > MAX_SIZE) { setFieldError(fieldId, true); return false; }
     if (ACCEPTED_TYPES.length && !ACCEPTED_TYPES.includes(file.type) && file.type !== '') {
-      // some phone cameras omit mime type; fall back to extension check
       const ext = file.name.split('.').pop().toLowerCase();
       if (!['pdf','jpg','jpeg','png'].includes(ext)) { setFieldError(fieldId, true); return false; }
     }
@@ -684,7 +683,6 @@
     reader.onload = () => res({ contents: reader.result.split(',')[1], mimeType: file.type });
   });
 
-  // Encoding is weighted as the first 35% of the bar, upload fills the rest
   const ENCODE_SHARE = 35;
   const progressTrack = document.getElementById('progressTrack');
   const progressFill = document.getElementById('progressFill');
@@ -695,24 +693,17 @@
     if (text) label.textContent = text;
   }
 
-  function uploadWithProgress(url, bodyString) {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', url, true);
-      xhr.upload.onprogress = (e) => {
-        if (e.lengthComputable) {
-          const uploadPct = (e.loaded / e.total) * (100 - ENCODE_SHARE);
-          const pct = ENCODE_SHARE + uploadPct;
-          setProgress(pct, 'Uploading... ' + Math.round(pct) + '%');
-        }
-      };
-      xhr.onload = () => resolve(xhr);
-      xhr.onerror = () => reject(new Error('Network error'));
-      xhr.send(bodyString);
+  // Cross-origin robust transmission via fetch API
+  async function uploadWithProgress(url, bodyString) {
+    setProgress(75, 'Submitting data...');
+    return await fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: bodyString
     });
   }
 
-  // Replace these with your real WhatsApp group invite links
   const WHATSAPP_LINKS = {
     Male: 'https://chat.whatsapp.com/GzLvQSyd2oF4CPziDs1dTZ?s=cl&p=a&ilr=1',
     Female: 'https://chat.whatsapp.com/EtiOgGsejT75T2BRfAYOF1?s=cl&p=a&ilr=1'
@@ -768,19 +759,17 @@
         folderId: "1Dbtie1BIgCgYEP-oujQt8YzFz2I-a4ok"
       };
 
-      setProgress(ENCODE_SHARE, 'Uploading... ' + ENCODE_SHARE + '%');
       await uploadWithProgress(SCRIPT_URL, JSON.stringify(payload));
 
       setProgress(100, 'Done!');
       showToast('Application submitted successfully!', false);
 
-      // Reveal the WhatsApp group link matching the applicant's gender
+      // Reveal WhatsApp group link matching gender selection
       waLink.href = WHATSAPP_LINKS[gender];
       waLink.textContent = 'Join WhatsApp Group for job updates';
       waPanel.classList.add('show');
       waPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-      // Pop-up message after the success toast fades
       setTimeout(() => {
         showToast('Join WhatsApp Group for job updates', false, WHATSAPP_LINKS[gender]);
       }, 4000);
