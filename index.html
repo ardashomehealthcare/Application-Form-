@@ -411,6 +411,67 @@
 
   .toast.error { background: var(--color-error); }
 
+  /* Caretaker duty-instructions gate */
+  body.instructions-open { overflow: hidden; }
+
+  .instructions-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(22, 53, 47, 0.72);
+    backdrop-filter: blur(4px);
+  }
+
+  .instructions-modal {
+    width: min(680px, 100%);
+    max-height: min(92vh, 820px);
+    overflow: hidden;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    box-shadow: 0 18px 60px rgba(0,0,0,0.24);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rules-card { overflow: auto; padding: 26px 28px 10px; }
+  .rules-head { display: flex; gap: 14px; align-items: flex-start; }
+  .rules-icon { font-size: 29px; line-height: 1; }
+  .rules-head h2 {
+    font-family: var(--font-display);
+    font-size: clamp(19px, 3.5vw, 25px);
+    line-height: 1.3;
+    color: var(--color-primary);
+    margin: 0 0 7px;
+  }
+  .rules-en-sub { color: var(--color-muted); font-size: 12px; line-height: 1.5; margin: 0 0 13px; }
+  .rules-intro { font-size: 14px; line-height: 1.65; margin: 0; }
+  .rules-list { margin: 20px 0 8px; padding-left: 23px; }
+  .rules-list li { padding: 0 0 13px 5px; font-size: 13.5px; line-height: 1.7; }
+  .rules-list strong { color: var(--color-primary); }
+  .rules-confirm {
+    flex-shrink: 0;
+    padding: 16px 28px 22px;
+    background: #fcfbf9;
+    border-top: 1px solid var(--color-border);
+  }
+  .confirm-label {
+    display: flex; gap: 10px; align-items: flex-start;
+    cursor: pointer; font-size: 13px; line-height: 1.5; font-weight: 600;
+  }
+  .confirm-label input { accent-color: var(--color-primary); width: 18px; height: 18px; margin: 1px 0 0; flex-shrink: 0; }
+  #proceedBtn {
+    width: 100%; margin-top: 14px; padding: 13px 16px;
+    border: 0; border-radius: 10px; background: var(--color-primary); color: #fff;
+    font: 700 14px var(--font-body); cursor: pointer; transition: background .15s ease, opacity .15s ease;
+  }
+  #proceedBtn:hover:not(:disabled) { background: #16352F; }
+  #proceedBtn:disabled { opacity: .45; cursor: not-allowed; }
+
   @media (max-width: 480px) {
     .logo-banner { padding: 14px 16px; }
     .logo-banner img { max-width: 280px; }
@@ -418,6 +479,11 @@
     section.block { padding: 20px 18px; }
     .step span.label { font-size: 10px; }
     header.brand h1 { font-size: 22px; }
+    .instructions-overlay { padding: 10px; align-items: flex-end; }
+    .instructions-modal { max-height: 95vh; border-radius: 16px 16px 0 0; }
+    .rules-card { padding: 22px 18px 6px; }
+    .rules-confirm { padding: 14px 18px 18px; }
+    .rules-list li { font-size: 13px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -429,6 +495,38 @@
 
 <div class="logo-banner">
   <img src="https://drive.google.com/thumbnail?id=1yYyeHvHNdUzAJpe_yH8mu_9_fgRZEbYa&sz=w1000" alt="Ardas Home Health Care logo">
+</div>
+
+<div class="instructions-overlay" id="instructionsOverlay" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+  <div class="instructions-modal">
+    <div class="rules-card">
+      <div class="rules-head">
+        <span class="rules-icon" aria-hidden="true">⚠️</span>
+        <div>
+          <h2 id="rulesTitle">ਜੇਕਰ ਤੁਸੀਂ ਇਹ ਕੰਮ ਕਰ ਸਕਦੇ ਹੋ ਤਾਂ ਹੀ ਅਪਲਾਈ ਕਰੋ, ਨਹੀਂ ਤਾਂ ਅਪਲਾਈ ਨਾ ਕਰੋ</h2>
+          <p class="rules-en-sub">(If you are able to do all these things, only then apply. Otherwise, please DO NOT apply.)</p>
+          <p class="rules-intro">ਮਰੀਜ਼ ਦੀ ਸੇਵਾ ਅਤੇ ਦੇਖਭਾਲ ਪੂਰੀ ਇਮਾਨਦਾਰੀ ਤੇ ਜ਼ਿੰਮੇਵਾਰੀ ਵਾਲਾ ਕੰਮ ਹੈ। ਹੇਠਾਂ ਦਿੱਤੀਆਂ ਡਿਊਟੀ ਸ਼ਰਤਾਂ ਨੂੰ ਧਿਆਨ ਨਾਲ ਪੜ੍ਹੋ — ਜੇਕਰ ਤੁਸੀਂ ਇਹ ਸਾਰੇ ਕੰਮ ਬਿਨਾਂ ਆਨਾਕਾਨੀ ਦੇ ਖ਼ੁਦ ਕਰਨ ਲਈ ਤਿਆਰ ਹੋ, ਤਾਂ ਹੀ ਫ਼ਾਰਮ ਭਰੋ:</p>
+        </div>
+      </div>
+      <ol class="rules-list">
+        <li><strong>ਸਮੇਂ ਦੀ ਪਾਬੰਦੀ (Reach Always on Time):</strong> ਆਪਣੀ ਡਿਊਟੀ ਦੇ ਨਿਰਧਾਰਤ ਸਮੇਂ ਤੋਂ ਹਮੇਸ਼ਾ 10 ਤੋਂ 15 ਮਿੰਟ ਪਹਿਲਾਂ ਮਰੀਜ਼ ਦੇ ਘਰ ਪਹੁੰਚੋ। ਕਦੇ ਵੀ ਲੇਟ ਨਾ ਹੋਵੋ। ਜੇਕਰ ਕਿਸੇ ਐਮਰਜੈਂਸੀ ਕਾਰਨ ਦੇਰੀ ਹੁੰਦੀ ਹੈ ਤਾਂ ਪਹਿਲਾਂ ਹੀ ARDAS ਕੋਆਰਡੀਨੇਟਰ ਨੂੰ ਸੂਚਿਤ ਕਰੋ।</li>
+        <li><strong>ਡਿਊਟੀ ਦੌਰਾਨ ਹਮੇਸ਼ਾ ਹਾਜ਼ਰ ਤੇ ਚੌਕਸ ਰਹੋ (Always Present on Duty):</strong> ਮਰੀਜ਼ ਨੂੰ ਕਦੇ ਵੀ ਇਕੱਲਾ ਜਾਂ ਬਿਨਾਂ ਨਿਗਰਾਨੀ ਨਾ ਛੱਡੋ। ਡਿਊਟੀ ਸਮੇਂ ਦੌਰਾਨ ਸੌਣਾ ਜਾਂ ਬਿਨਾਂ ਇਜਾਜ਼ਤ ਬਾਹਰ ਜਾਣਾ ਸਖ਼ਤ ਮਨ੍ਹਾ ਹੈ।</li>
+        <li><strong>ਡਾਇਪਰ ਬਦਲਣ ਅਤੇ ਸਫ਼ਾਈ ਦੇ ਨਿਯਮ (How to Handle Diaper &amp; Hygiene):</strong> ਹਰ 3–4 ਘੰਟੇ ਬਾਅਦ ਜਾਂ ਲੋੜ ਪੈਣ 'ਤੇ ਡਾਇਪਰ ਚੈੱਕ ਕਰੋ। ਡਾਇਪਰ ਬਦਲਣ ਤੋਂ ਪਹਿਲਾਂ ਅਤੇ ਬਾਅਦ ਵਿੱਚ ਹੱਥ ਚੰਗੀ ਤਰ੍ਹਾਂ ਸਾਬਣ ਨਾਲ ਸਾਫ਼ ਕਰੋ। ਮਰੀਜ਼ ਦੀ ਚੰਗੀ ਤਰ੍ਹਾਂ ਸਫ਼ਾਈ ਕਰੋ ਤਾਂ ਜੋ ਰੈਸ਼ੇਜ਼ ਜਾਂ ਇਨਫੈਕਸ਼ਨ ਨਾ ਹੋਵੇ। ਵਰਤਿਆ ਹੋਇਆ ਡਾਇਪਰ ਲਿਫ਼ਾਫ਼ੇ ਵਿੱਚ ਚੰਗੀ ਤਰ੍ਹਾਂ ਲਪੇਟ ਕੇ ਹੀ ਡਸਟਬਿਨ ਵਿੱਚ ਪਾਓ।</li>
+        <li><strong>24 ਘੰਟੇ ਦੀ ਡਿਊਟੀ ਲਈ ਆਪਣਾ ਸਾਮਾਨ ਨਾਲ ਲਿਆਓ (Personal Items for 24-Hour Duty):</strong> ਜੇਕਰ ਤੁਸੀਂ 24 ਘੰਟੇ (ਰਹਿਣ ਵਾਲੀ) ਡਿਊਟੀ 'ਤੇ ਹੋ, ਤਾਂ ਆਪਣਾ ਸਾਬਣ, ਸ਼ੈਂਪੂ, ਬੁਰਸ਼, ਪੇਸਟ, ਤੌਲੀਆ ਅਤੇ ਹੋਰ ਰੋਜ਼ਾਨਾ ਵਰਤੋਂ ਦੀਆਂ ਲੋੜੀਂਦੀਆਂ ਚੀਜ਼ਾਂ ਆਪਣੇ ਨਾਲ ਖ਼ੁਦ ਲੈ ਕੇ ਆਓ। ਮਰੀਜ਼ ਜਾਂ ਪਰਿਵਾਰ ਦੇ ਸਾਮਾਨ ਦੀ ਵਰਤੋਂ ਨਾ ਕਰੋ।</li>
+        <li><strong>ਦਵਾਈਆਂ ਅਤੇ ਖ਼ੁਰਾਕ ਸਮੇਂ ਸਿਰ (Medication &amp; Feeding on Time):</strong> ਡਾਕਟਰ ਦੀ ਪਰਚੀ ਅਨੁਸਾਰ ਮਰੀਜ਼ ਨੂੰ ਸਹੀ ਸਮੇਂ 'ਤੇ ਦਵਾਈ ਅਤੇ ਖ਼ੁਰਾਕ ਦਿਓ। ਬਿਨਾਂ ਡਾਕਟਰ ਦੀ ਸਲਾਹ ਤੋਂ ਕੋਈ ਦਵਾਈ ਨਾ ਦਿਓ।</li>
+        <li><strong>ਬੈੱਡ ਸੋਰ (ਜ਼ਖ਼ਮ) ਤੋਂ ਬਚਾਅ ਅਤੇ ਮਰੀਜ਼ ਦੀ ਸਹਾਇਤਾ (Bedsore Care &amp; Mobility):</strong> ਲਗਾਤਾਰ ਬੈੱਡ 'ਤੇ ਪਏ ਮਰੀਜ਼ ਦੀ ਹਰ 2 ਘੰਟਿਆਂ ਬਾਅਦ ਕਰਵਟ (Position) ਜ਼ਰੂਰ ਬਦਲੋ ਤਾਂ ਜੋ ਪਿੱਠ 'ਤੇ ਜ਼ਖ਼ਮ ਨਾ ਬਣਨ। ਮਰੀਜ਼ ਨੂੰ ਚੱਲਣ ਜਾਂ ਬੈਠਣ ਸਮੇਂ ਪੂਰਾ ਸਹਾਰਾ ਦਿਓ ਤਾਂ ਜੋ ਡਿੱਗਣ ਦਾ ਖ਼ਤਰਾ ਨਾ ਹੋਵੇ।</li>
+        <li><strong>ਮੋਬਾਈਲ ਫ਼ੋਨ ਅਤੇ ਚੰਗਾ ਵਿਵਹਾਰ (Mobile Phone Usage &amp; Conduct):</strong> ਡਿਊਟੀ ਦੌਰਾਨ ਮੋਬਾਈਲ 'ਤੇ ਗੇਮਾਂ ਖੇਡਣਾ, ਵੀਡੀਓਜ਼ ਦੇਖਣਾ ਜਾਂ ਬੇਲੋੜੀਆਂ ਕਾਲਾਂ ਕਰਨਾ ਮਨ੍ਹਾ ਹੈ। ਮਰੀਜ਼ ਅਤੇ ਪਰਿਵਾਰਕ ਮੈਂਬਰਾਂ ਨਾਲ ਹਮੇਸ਼ਾ ਆਦਰ ਅਤੇ ਨਿਮਰਤਾ ਨਾਲ ਗੱਲ ਕਰੋ।</li>
+        <li><strong>ਤੁਰੰਤ ਰਿਪੋਰਟਿੰਗ (Emergency &amp; Vital Reporting):</strong> ਮਰੀਜ਼ ਦੀ ਤਬੀਅਤ ਵਿੱਚ ਕੋਈ ਵੀ ਤਬਦੀਲੀ (ਜਿਵੇਂ ਬੁਖ਼ਾਰ, ਸਾਹ ਲੈਣ ਵਿੱਚ ਤਕਲੀਫ਼, ਬੀ.ਪੀ. ਉੱਪਰ-ਥੱਲੇ ਹੋਣਾ) ਹੋਣ 'ਤੇ ਤੁਰੰਤ ਪਰਿਵਾਰ ਅਤੇ ARDAS ਕੋਆਰਡੀਨੇਟਰ (+91 98770 62683) ਨੂੰ ਸੂਚਿਤ ਕਰੋ।</li>
+      </ol>
+    </div>
+    <div class="rules-confirm">
+      <label class="confirm-label" for="rulesConfirmed">
+        <input type="checkbox" id="rulesConfirmed">
+        <span>ਮੈਂ ਉੱਪਰ ਦਿੱਤੀਆਂ ਸਾਰੀਆਂ ਡਿਊਟੀ ਹਦਾਇਤਾਂ ਪੜ੍ਹ ਲਈਆਂ ਹਨ ਅਤੇ ਇਨ੍ਹਾਂ ਦੀ ਪਾਲਣਾ ਕਰਨ ਲਈ ਸਹਿਮਤ ਹਾਂ।</span>
+      </label>
+      <button type="button" id="proceedBtn" disabled>ਮੈਂ ਸਹਿਮਤ ਹਾਂ — ਫ਼ਾਰਮ ਭਰਨਾ ਸ਼ੁਰੂ ਕਰੋ</button>
+    </div>
+  </div>
 </div>
 
 <div class="page">
@@ -571,6 +669,21 @@
 <div class="toast" id="toast"></div>
 
 <script>
+  const instructionsOverlay = document.getElementById('instructionsOverlay');
+  const rulesConfirmed = document.getElementById('rulesConfirmed');
+  const proceedBtn = document.getElementById('proceedBtn');
+  document.body.classList.add('instructions-open');
+
+  rulesConfirmed.addEventListener('change', () => {
+    proceedBtn.disabled = !rulesConfirmed.checked;
+  });
+  proceedBtn.addEventListener('click', () => {
+    if (!rulesConfirmed.checked) return;
+    instructionsOverlay.remove();
+    document.body.classList.remove('instructions-open');
+    document.getElementById('fullname').focus();
+  });
+
   const form = document.getElementById('applicationForm');
   const SCRIPT_URL = form.action;
   const MAX_SIZE = 5 * 1024 * 1024; // 5MB
